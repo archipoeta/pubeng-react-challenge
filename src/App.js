@@ -69,12 +69,21 @@ class App extends React.Component {
     // Assign this.state.data to data
     const { data } = this.state
 
-    // Await the results (async)
-    const results = await api.post({ ...data, publish })
-    console.log('Content updated!')
+    // Saving ... Notification
+    this.setState({notify:{msg: 'Saving ...', class: ''}})
+    try {
+      // Await the results (async)
+      const results = await api.post({ ...data, publish })
 
-    // Return resolved or rejected promise
-    return results
+      // Content Updated Notification
+      this.setState({notify:{msg: 'Content updated!', class: 'Success'}})
+
+      // Return resolved or rejected promise
+      return results
+    } catch(e) {
+      // API Error Notification
+      this.setState({notify:{msg: 'Uh-Oh! API Error!', class: 'Fail'}})
+    }
   }
 
   /**
