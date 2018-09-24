@@ -1,6 +1,6 @@
 // Config
 import React from 'react'
-import { Checkbox, Repeatable, Text, Textarea } from './components'
+import { Checkbox, Repeatable, Select, Text, Textarea } from './components'
 import api from './mockApi'
 
 // React Component Class
@@ -114,6 +114,9 @@ class App extends React.Component {
       <div className="Form">
         <Input label="Title" id="title">
           {props => <Text {...props} />}
+        </Input>
+        <Input label="Year" id="year">
+          {props => <Select {...props} />}
         </Input>
         <Input label="Upcoming" id="upcoming">
           {props => <Checkbox {...props} />}
