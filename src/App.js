@@ -1,6 +1,6 @@
 // Config
 import React from 'react'
-import { Checkbox, Repeatable, Select, Text, Textarea } from './components'
+import { Checkbox, Number, Repeatable, Select, Text, Textarea } from './components'
 import api from './mockApi'
 
 // React Component Class
@@ -66,7 +66,20 @@ class App extends React.Component {
   Input({ children, iterable, label, id }) {
     // handleChange Overload
     // (so we can map change to element id iteratively)
-    const handleChange = value => {
+    // CHANGED
+    // ** we want type=number values to be actual integers! **
+    // ** we want type=checkbox values to be actual booleans! **
+    // trying to do this inside the child component
+    // seemed to trigger a race condition on updating the state
+    const handleChange = (value, type) => {
+      if (type !== null) {
+        if (type === 'number') {
+          value = parseInt(value,10) || 0
+        } else if (type === 'checkbox') {
+          value = value === 'true' ? true : false
+        }
+      }
+      // END CHANGED
       this.handleChange({ [id]: value })
     }
 
@@ -95,7 +108,7 @@ class App extends React.Component {
         id,
         value,
         onBlur: () => this.handleUpdate(false),
-        onChange: e => handleChange(e.target.value),
+        onChange: e => handleChange(e.target.value, e.target.type),
       }
     }
 
@@ -126,6 +139,9 @@ class App extends React.Component {
         </Input>
         <Input label="Cast" iterable id="cast">
           {props => <Repeatable {...props} />}
+        </Input>
+        <Input label="Rating" id="rating">
+          {props => <Number {...props} />}
         </Input>
         <button onClick={() => this.handleUpdate(true)}>
           {'Publish'}
