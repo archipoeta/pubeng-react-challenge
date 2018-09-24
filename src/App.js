@@ -10,7 +10,12 @@ class App extends React.Component {
     super(props)
     // Initialize State
     this.state = {
+      notify: {
+        class: "",
+        msg: "",
+      },
       data: {
+        id: props.id || 0,
         title: '',
         rating: 0,
         year: null,
@@ -24,6 +29,24 @@ class App extends React.Component {
     this.handleChange = this.handleChange.bind(this)
     this.handleUpdate = this.handleUpdate.bind(this)
     this.Input = this.Input.bind(this)
+    this.Notify = this.Notify.bind(this)
+  }
+
+  // Do this async so we can await
+  // the api.get call
+  async componentDidMount() {
+    // Load initial data if props.id
+    // was set in the state
+    if (this.state.data.id > 0) {
+      // Loading ... Notification
+      this.setState({notify:{msg: 'Loading ...', class: ''}})
+      // Await the results (async)
+      const data = await api.get(this.state.data.id)
+      // Reset Notification
+      this.setState({notify:{msg: '', class: ''}})
+      // Update UI with loaded data
+      this.handleChange(data)
+    }
   }
 
   /**
@@ -121,10 +144,23 @@ class App extends React.Component {
     )
   }
 
+  /**
+   * @func Notify
+   * @dsec Our Notify Component
+   */
+  Notify() {
+     return (
+      <div className={this.state.notify.class}>
+          {this.state.notify.msg}
+      </div>
+    )
+  }
+
   render() {
-    const { Input } = this
+    const { Input, Notify } = this
     return (
       <div className="Form">
+        <Notify />
         <Input label="Title" id="title">
           {props => <Text {...props} />}
         </Input>

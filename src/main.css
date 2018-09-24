@@ -29,6 +29,13 @@ body {
   font-weight: 600;
 }
 
+.Success {
+  color: green;
+}
+.Fail {
+  color: red;
+}
+
 input[type="text"],
 textarea {
   display: block;
